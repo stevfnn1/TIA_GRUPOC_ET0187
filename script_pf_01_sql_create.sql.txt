@@ -1,0 +1,178 @@
+
+drop table if exists entregables cascade;
+drop table if exists tipos_entregable cascade;
+drop table if exists evaluaciones cascade;
+drop table if exists evaluadores cascade;
+drop table if exists proyectos cascade;
+drop table if exists tipos_proyecto cascade;
+drop table if exists rol_permiso cascade;
+drop table if exists permisos cascade;
+drop table if exists usuario_rol cascade;
+drop table if exists usuarios cascade;
+drop table if exists roles cascade;
+drop table if exists estudiantes cascade;
+drop table if exists asignaturas cascade;
+drop table if exists docentes cascade;
+drop table if exists programas cascade;
+drop table if exists departamentos cascade;
+drop table if exists facultades cascade;
+drop table if exists instituciones cascade;
+drop table if exists decanos cascade;
+
+--1. decanos
+create table decanos (
+    id_decano serial primary key,
+    nombre varchar(100) not null,
+    apellido varchar(100) not null,
+    email varchar(100),
+    telefono varchar(105),
+    sexo varchar(100)
+);
+
+-- 2. instituciones
+create table instituciones (
+    id_institucion serial primary key,
+    nombre varchar(100) not null
+);
+
+-- 3. facultades
+create table facultades (
+    id_facultad serial primary key,
+    nombre varchar(100) not null,
+    id_institucion integer references instituciones(id_institucion)
+);
+
+-- 4. departamentos
+create table departamentos (
+    id_departamento serial primary key,
+    nombre varchar(100) not null,
+    id_facultad integer references facultades(id_facultad),
+    id_decano integer references decanos(id_decano)
+);
+
+-- 5. programas
+create table programas (
+    id_programa serial primary key,
+    nombre varchar(100) not null,
+    id_departamento integer references departamentos(id_departamento),
+	creditos integer check (creditos > 0)
+);
+
+-- 6. docentes
+create table docentes (
+    id_docente serial primary key,
+    nombre varchar(100) not null,
+    apellido varchar(100) not null,
+    email varchar(100),
+    telefono varchar(15),
+    sexo varchar(100),
+    id_departamento integer references departamentos(id_departamento)
+);
+
+-- 7. asignaturas
+create table asignaturas (
+    id_asignatura serial primary key,
+    nombre varchar(100) not null,
+    semestre integer,
+    creditos integer check (creditos > 0),
+    id_programa integer references programas(id_programa),
+    id_docente integer references docentes(id_docente)
+);
+
+-- 8. estudiantes
+create table estudiantes (
+    id_estudiante serial primary key,
+    nombre varchar(100) not null,
+    apellido varchar(100) not null,
+    sexo varchar(100),
+    email varchar(100),
+    telefono varchar(105),
+	 id_asignatura integer references asignaturas (id_asignatura),
+    id_programa integer references programas(id_programa)
+);
+
+-- 9. roles
+create table roles (
+    id_rol serial primary key,
+    nombre varchar(50) not null
+);
+
+-- 10. usuarios
+create table usuarios (
+    id_usuario serial primary key,
+    username varchar(100) not null unique,
+    clave varchar(255) not null
+);
+
+-- 11. usuario_rol (relación n:m)
+create table usuario_rol (
+    id_usuario integer references usuarios(id_usuario),
+    id_rol integer references roles(id_rol),
+    primary key (id_usuario, id_rol)
+);
+
+-- 12. permisos
+create table permisos (
+    id_permiso serial primary key,
+    descripcion varchar(200)
+);
+
+-- 13. rol_permiso (relación n:m)
+create table rol_permiso (
+    id_rol integer references roles(id_rol),
+    id_permiso integer references permisos(id_permiso),
+    primary key (id_rol, id_permiso)
+);
+
+-- 14. tipos_proyecto
+create table tipos_proyecto (
+    id_tipo serial primary key,
+    descripcion varchar(100) not null
+);
+
+-- 15. proyectos
+create table proyectos (
+    id_proyecto serial primary key,
+    titulo varchar(200),
+    descripcion text,
+    fecha_inscripcion date default current_date,
+    id_tipo integer references tipos_proyecto(id_tipo),
+    id_asignatura integer references asignaturas(id_asignatura),
+    id_docente integer references docentes(id_docente)
+);
+
+-- 16. evaluadores
+create table evaluadores (
+    id_evaluador serial primary key,
+    nombre varchar(100) not null,
+    apellido varchar(100) not null,
+    email varchar(100),
+    telefono varchar(100),
+    sexo varchar(100),
+    id_asignatura integer references asignaturas(id_asignatura)
+);
+
+-- 17. evaluaciones
+create table evaluaciones (
+    id_evaluacion serial primary key,
+    resultado decimal(3,2) check (resultado >= 0 and resultado <= 5),
+    fecha_evaluacion date,
+    id_proyecto integer references proyectos(id_proyecto),
+    id_evaluador integer references evaluadores(id_evaluador)
+);
+
+-- 18. tipos_entregable
+create table tipos_entregable (
+    id_tipo_entregable serial primary key,
+    descripcion varchar(100) not null
+);
+
+-- 19. entregables
+create table entregables (
+    id_entregable serial primary key,
+    nombre varchar(100) not null,
+    fecha_entrega date not null,
+    observaciones text,
+    id_proyecto integer references proyectos(id_proyecto),
+    id_tipo_entregable integer references tipos_entregable(id_tipo_entregable)
+);
