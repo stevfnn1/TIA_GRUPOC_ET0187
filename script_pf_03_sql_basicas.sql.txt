@@ -1,0 +1,231 @@
+
+--1. listado de docentes #1. (listado de docentes en orden alfabético por apellidos y nombres. incluir 6 campos)
+select 
+    id_docente as "id",
+    apellido as "apellido",
+    nombre as "nombre",
+    email as "correo electrónico",
+    telefono as "teléfono",
+    sexo as "sexo"
+from 
+    docentes
+order by 
+    apellido asc,
+    nombre asc;
+
+
+
+--2 listado de docentes #2(listado de docentes en orden de código de departamento y alfabético por apellidos y nombres. incluir 6 campos)
+select 
+id_departamento,
+apellido,
+nombre,
+    id_docente, 
+    email, 
+    telefono
+from 
+    docentes
+order by 
+    id_departamento asc,
+    apellido asc,
+    nombre asc;
+
+
+--3 listado de docentes #3 (listado de docentes del departamento de “sistemas digitales” ordenado por código de docente (documento de identificación). incluir 5 campos)
+
+select 
+    id_docente,
+    nombre,
+    apellido,
+    email,
+    telefono,
+	id_departamento
+	
+from 
+    docentes
+where 
+    id_departamento = 1
+order by 
+    id_docente asc;
+
+
+
+--4 listado de docentes #4 (listado de cantidad de docentes por departamento. presentar el listado con código departamento y cantidad total de docentes por departamento). 
+
+select 
+    id_departamento,
+    count(*) as cantidad_docentes
+from 
+    docentes
+group by 
+    id_departamento
+order by 
+    id_departamento;
+
+
+
+--5. listado de estudiantes #1 (listado de estudiantes en orden de género (sexo), apellidos y nombres. incluir 6 campos)
+select 
+sexo,
+apellido,
+nombre,
+    id_estudiante,
+    email,
+	telefono
+from 
+    estudiantes
+
+
+-- 6. listado de estudiantes #2 (listado de estudiantes ordenada por género (sexo),  apellidos y nombres. incluir 7 campos)
+select 
+    id_estudiante,
+    nombre,
+	telefono,
+    apellido,
+	email,
+    sexo,
+	id_programa
+from 
+    estudiantes
+order by 
+    sexo, apellido, nombre;
+
+
+
+--7. listado de estudiantes #3 (listado de estudiantes del programa “ingeniería de software” y “tecnología en desarrollo de software” ordenado por código de programa y (documento de identificación). incluir 5 campos).
+
+select 
+id_programa,
+    id_estudiante,
+    nombre,
+    apellido,
+    email,
+    telefono
+from 
+    estudiantes
+where 
+    id_programa in (
+        (select id_programa from programas where nombre = 'ingenieria en software'),
+        (select id_programa from programas where nombre = 'tecnologia en desarrollo de software')
+    )
+order by 
+    id_programa,
+    id_estudiante;
+
+
+
+--8. listado de estudiantes #4 (listado de cantidad de estudiantes por programa. presentar el listado con código de programa y cantidad total de estudiantes por programa).
+
+select 
+    id_programa,
+    count(*) as total_estudiantes
+from 
+    estudiantes
+group by 
+    id_programa
+order by 
+    id_programa;
+
+
+
+--9 listado de asignaturas #1 (listado de asignaturas ordenado por código de nombre. incluir 6 campos)
+
+    select 
+    id_asignatura,
+    nombre,
+    semestre,
+    creditos,
+    id_programa,
+    id_docente
+from 
+    asignaturas
+order by 
+    nombre asc;
+
+
+--10 listado de asignaturas #2 (listado de asignaturas del programa de “ingeniería de software” y “tecnologías en desarrollo de software” ordenado por código de programa y código asignatura. incluir minimo 6 campos)
+
+select 
+id_programa,
+    id_asignatura,
+    nombre,
+    semestre,
+    creditos,
+    id_docente
+from 
+    asignaturas
+where 
+    id_programa in (5,6)
+order by 
+    id_programa asc,
+    id_asignatura asc;
+
+--11 listado de asignaturas #3 (listado de asignaturas del programa de “ingeniería de software” y “tecnologías en desarrollo de software” ordenado por código de programa y código asignatura. incluir minimo 6 campos)
+
+select 
+id_programa,
+    id_asignatura,
+    nombre,
+    semestre,
+    creditos,
+    id_docente
+from 
+    asignaturas
+where 
+    id_programa in (5,6)
+order by 
+    id_programa asc,
+    id_asignatura asc;
+
+
+--12 listado de asignaturas #4 (listado de cantidad de asignaturas por programa. presentar el listado con código de programa y cantidad total de asignaturas  por programa).
+
+select 
+    id_programa,
+    count(*) as total_asignaturas
+from 
+    asignaturas
+group by 
+    id_programa
+order by 
+    id_programa;
+
+-- 13 listado de proyectos #1 ( listado de proyectos ordenados alfabetica por titulo de proyecto y después id_proyecto(incluir 4 campos)).
+
+select 
+    id_proyecto, 
+    titulo, 
+    descripcion, 
+    fecha_inscripcion, 
+    id_tipo, 
+    id_asignatura 
+from 
+    proyectos 
+order by 
+    titulo asc,
+    id_proyecto asc;
+
+
+
+-- 14 listado de  decanos #1 (listado de decanos ordenados alfabéticamente por nombre y después apellido (incluir 4 campos)).
+select 
+    nombre, 
+    apellido, 
+    email, 
+    telefono, 
+    sexo
+from 
+    decanos
+order by 
+    nombre asc, 
+    apellido asc;
+
+--15 listado de usuarios #1 ( listado de usuarios ordenados por la clave con mas caracteres y que descienda hasta el menor)
+select 
+    username,
+    clave,
+    length(clave) as longitud_clave
+from 
+    usuarios
+order by 
+    longitud_clave desc;

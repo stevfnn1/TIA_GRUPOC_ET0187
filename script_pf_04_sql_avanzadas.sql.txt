@@ -1,0 +1,265 @@
+1. listado de proyectos #1 (listado general de proyectos ordenado por facultad, programa y código de proyecto.  obligatorio el uso de las tablas: tipos de proyecto, proyectos, facultad, programas)
+
+select
+    facultades.nombre as facultad,
+    programas.nombre as programa,
+    proyectos.id_proyecto as id_proyecto,
+    proyectos.titulo as nombre_proyecto,
+    tipos_proyecto.descripcion as tipo_proyecto
+from proyectos
+join tipos_proyecto as tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join asignaturas as asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join programas as programas on asignaturas.id_programa = programas.id_programa
+join departamentos as departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades as facultades on departamentos.id_facultad = facultades.id_facultad
+order by facultades.nombre, programas.nombre, proyectos.id_proyecto;
+
+
+
+2. listado de proyectos #2 listado detallado de proyectos ordenado por código de proyecto.  obligatorio el uso de las tablas: tipos de proyecto, proyectos, facultad, programas, asignaturas, grupos,  docentes y estudiantes. debe incluir los nombres de tipo de proyecto, nombre proyecto, nombre facultad, nombre programa, nombre asignatura, nombre docentes, nombre estudiantes).
+
+select
+    tipos_de_proyecto.descripcion as tipo_de_proyecto,
+    proyectos.titulo as nombre_del_proyecto,
+    facultades.nombre as nombre_de_la_facultad,
+    programas.nombre as nombre_del_programa,
+    asignaturas.nombre as nombre_de_la_asignatura,
+    concat(docentes.nombre, ' ', docentes.apellido) as nombre_completo_del_docente,
+    concat(estudiantes.nombre, ' ', estudiantes.apellido) as nombre_completo_del_estudiante
+from proyectos as proyectos
+join tipos_proyecto as tipos_de_proyecto on proyectos.id_tipo = tipos_de_proyecto.id_tipo
+join asignaturas as asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join programas as programas on asignaturas.id_programa = programas.id_programa
+join departamentos as departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades as facultades on departamentos.id_facultad = facultades.id_facultad
+join docentes as docentes on proyectos.id_docente = docentes.id_docente
+join estudiantes as estudiantes on estudiantes.id_programa = programas.id_programa
+order by proyectos.id_proyecto;
+
+3. listado de proyectos #3 listado general de evaluación de proyectos. nota: es libre la construcción de la consulta. lo importante es que tenga todos los datos relevantes de los resultados de la evaluación de los proyectos).
+
+select
+    proyectos.id_proyecto as codigo_del_proyecto,
+    proyectos.titulo as nombre_del_proyecto,
+    tipos_proyecto.descripcion as tipo_de_proyecto,
+    concat(docentes.nombre, ' ', docentes.apellido) as nombre_completo_del_docente,
+    proyectos.fecha_inscripcion as fecha_de_inscripcion_del_proyecto,
+    concat(evaluadores.nombre, ' ', evaluadores.apellido) as nombre_completo_del_evaluador,
+    evaluaciones.fecha_evaluacion as fecha_de_evaluacion,
+    evaluaciones.resultado as nota_obtenida
+from evaluaciones as evaluaciones
+join proyectos as proyectos on evaluaciones.id_proyecto = proyectos.id_proyecto
+join tipos_proyecto as tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join docentes as docentes on proyectos.id_docente = docentes.id_docente
+join evaluadores as evaluadores on evaluaciones.id_evaluador = evaluadores.id_evaluador
+order by proyectos.id_proyecto, evaluaciones.fecha_evaluacion;
+
+
+
+4. listado de proyectos #4 listado de cantidad de proyectos por programa ordenado por facultad/programa(proyecto. presentar el listado con código y descripción de la facultad, código y descripción del programa y cantidad total de proyectos por programa).
+select
+    facultades.id_facultad as id_facultad,
+    programas.id_programa as id_programa,
+    facultades.nombre as descripcion_facultad,
+    programas.nombre as descripcion_programa,
+    count(proyectos.id_proyecto) as cantidad_total_proyectos
+from programas
+join departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades on departamentos.id_facultad = facultades.id_facultad
+left join asignaturas on asignaturas.id_programa = programas.id_programa
+left join proyectos on proyectos.id_asignatura = asignaturas.id_asignatura
+group by facultades.id_facultad, programas.id_programa, facultades.nombre, programas.nombre
+order by facultades.id_facultad, programas.id_programa;
+
+
+
+5. listado de asignaturas/estudiantes #1 listado de estudiantes de una asignatura/grupo. ejemplo: listado de estudiantes de la asignatura “base de datos i” (et0187) “grupo 051”. 
+
+select
+    tabla_estudiantes.id_estudiante as id_estudiante,
+    tabla_estudiantes.nombre as nombre_estudiante,
+    tabla_estudiantes.apellido as apellido_estudiante,
+    tabla_asignaturas.id_asignatura as id_asignatura,
+    tabla_asignaturas.nombre as nombre_asignatura
+from estudiantes as tabla_estudiantes
+join asignaturas as tabla_asignaturas
+    on tabla_estudiantes.id_asignatura = tabla_asignaturas.id_asignatura
+where (tabla_asignaturas.nombre) = 'programacion'
+order by tabla_estudiantes.apellido, tabla_estudiantes.nombre;
+
+
+6.listado de asignaturas/estudiantes #2 listado de asignaturas/grupos de los diferentes tipos de proyecto ordenado por tipo de proyecto, facultad, programa, asignatura
+
+select
+    tipos_proyecto.descripcion as tipo_proyecto,
+    facultades.id_facultad as id_facultad,
+    facultades.nombre as nombre_facultad,
+    programas.id_programa as id_programa,
+    programas.nombre as nombre_programa,
+    asignaturas.id_asignatura as id_asignatura,
+    asignaturas.nombre as nombre_asignatura
+from proyectos
+join tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join programas on asignaturas.id_programa = programas.id_programa
+join departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades on departamentos.id_facultad = facultades.id_facultad
+group by 
+    tipos_proyecto.descripcion,
+    facultades.id_facultad, facultades.nombre,
+    programas.id_programa, programas.nombre,
+    asignaturas.id_asignatura, asignaturas.nombre
+order by 
+    tipos_proyecto.descripcion,
+    facultades.nombre,
+    programas.nombre,
+    asignaturas.nombre;
+
+7. listado de asignaturas/estudiantes #3 listado de cantidad de tipos de proyectos por facultad y programa ordenado por tipo de facultad/programa/tipo de proyecto. presentar el listado con código y descripción de la facultad, código y descripción del programa, código y descripción del tipo de proyecto y cantidad total de tipos de proyectos. 
+
+select
+    facultades.id_facultad as id_facultad,
+    facultades.nombre as descripcion_facultad, 
+    programas.id_programa as id_programa,
+    programas.nombre as descripcion_programa,
+    tipos_proyecto.id_tipo as id_tipo_proyecto,
+    tipos_proyecto.descripcion as descripcion_tipo_proyecto,
+    count(proyectos.id_proyecto) as cantidad_total_proyectos
+from proyectos
+join tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join programas on asignaturas.id_programa = programas.id_programa
+join departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades on departamentos.id_facultad = facultades.id_facultad
+group by
+    facultades.id_facultad, facultades.nombre,
+    programas.id_programa, programas.nombre,
+    tipos_proyecto.id_tipo, tipos_proyecto.descripcion
+order by
+    facultades.nombre,
+    programas.nombre,
+    tipos_proyecto.descripcion;
+
+
+8. listado de evaluadores #1 (listado de evaluadores de los diferentes proyectos ordenado por evaluador, facultad, programa, tipo de proyecto y proyecto (no solamente los códigos. también se requieren todas las descripciones)  
+
+select
+    evaluadores.id_evaluador,
+    concat(evaluadores.nombre, ' ', evaluadores.apellido) as nombre_evaluador,
+
+    facultades.id_facultad,
+    facultades.nombre as descripcion_facultad,
+
+    programas.id_programa,
+    programas.nombre as descripcion_programa,
+
+    tipos_proyecto.id_tipo,
+    tipos_proyecto.descripcion as descripcion_tipo_proyecto,
+
+    proyectos.id_proyecto,
+    proyectos.titulo as titulo_proyecto
+
+from evaluaciones
+join evaluadores on evaluaciones.id_evaluador = evaluadores.id_evaluador
+join proyectos on evaluaciones.id_proyecto = proyectos.id_proyecto
+join tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join programas on asignaturas.id_programa = programas.id_programa
+join departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades on departamentos.id_facultad = facultades.id_facultad
+
+order by
+    nombre_evaluador,
+    facultades.nombre,
+    programas.nombre,
+    tipos_proyecto.descripcion,
+    proyectos.titulo;
+
+9. listado de evaluadores #2 listado de evaluadores con resultados generales de evaluación de los proyectos asignados
+
+select
+    evaluadores.id_evaluador,
+    concat(evaluadores.nombre, ' ', evaluadores.apellido) as nombre_evaluador,
+    count(evaluaciones.id_evaluacion) as cantidad_proyectos_evaluados,
+    round(avg(evaluaciones.resultado), 2) as promedio_resultado,
+    max(evaluaciones.resultado) as resultado_maximo,
+    min(evaluaciones.resultado) as resultado_minimo
+from evaluaciones
+join evaluadores on evaluaciones.id_evaluador = evaluadores.id_evaluador
+group by evaluadores.id_evaluador, evaluadores.nombre, evaluadores.apellido
+order by nombre_evaluador;
+
+10.listado de evaluadores #3 listado de evaluadores con resultados detallados de evaluación de los proyectos asignados
+
+select
+    evaluadores.id_evaluador,
+    concat(evaluadores.nombre, ' ', evaluadores.apellido) as nombre_evaluador,
+    
+    proyectos.id_proyecto,
+    proyectos.titulo as titulo_proyecto,
+
+    evaluaciones.resultado,
+    evaluaciones.fecha_evaluacion,
+
+    tipos_proyecto.id_tipo,
+    tipos_proyecto.descripcion as descripcion_tipo_proyecto,
+
+    programas.id_programa,
+    programas.nombre as descripcion_programa,
+
+    facultades.id_facultad,
+    facultades.nombre as descripcion_facultad
+
+from evaluaciones
+join evaluadores on evaluaciones.id_evaluador = evaluadores.id_evaluador
+join proyectos on evaluaciones.id_proyecto = proyectos.id_proyecto
+join tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join programas on asignaturas.id_programa = programas.id_programa
+join departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades on departamentos.id_facultad = facultades.id_facultad
+
+order by
+    nombre_evaluador,
+    fecha_evaluacion,
+    titulo_proyecto;
+
+
+
+11. listado de usuarios #1 listado de usuarios del sistema con el rol asociado y las características del usuario
+
+select
+    usuarios.id_usuario,
+    usuarios.username,
+    roles.id_rol,
+    roles.nombre as nombre_rol
+from usuarios
+join usuario_rol on usuarios.id_usuario = usuario_rol.id_usuario
+join roles on usuario_rol.id_rol = roles.id_rol
+order by usuarios.username;
+
+
+12. listado de departamento/decanos listado de decanos con su id y nombre, su departamento y nombre, su rol y nombre, y la cantidad de departamentos de los decanos en los que participa, ordenados alfabéticamente por su nombre, departamento y rol
+
+   select
+    d.id_decano,
+    d.nombre as nombre_decano,
+    
+    dept.id_departamento,
+    dept.nombre as nombre_departamento,
+    
+    r.id_rol,
+    r.nombre as nombre_rol,
+    
+    count(*) over (partition by d.id_decano) as cantidad_departamentos
+
+from decanos d
+join departamentos dept on d.id_decano = dept.id_decano
+join usuarios u on u.id_usuario = d.id_decano
+join usuario_rol ur on ur.id_usuario = u.id_usuario
+join roles r on r.id_rol = ur.id_rol
+
+order by
+    nombre_decano,
+    nombre_departamento,
+    nombre_rol;
