@@ -1,0 +1,254 @@
+1 vista_proyectos (consulta de proyectos - vista #1
+listado de proyectos.  obligatorio el uso asociado de las tablas: tipos de proyecto, proyectos, facultad, programas, asignaturas, grupos, docentes y estudiantes. esta vista debe ser completa con todos los campos código y descripción (o nombre); y los datos más relevantes.  nota: las vistas no deben tener orden)
+
+create view vista_proyectos_completa as
+select
+    -- proyecto
+    p.id_proyecto,
+    p.titulo as titulo_proyecto,
+    p.descripcion as descripcion_proyecto,
+    p.fecha_inscripcion,
+    
+    -- tipo de proyecto
+    tp.id_tipo,
+    tp.descripcion as descripcion_tipo_proyecto,
+    
+    -- asignatura
+    a.id_asignatura,
+    a.nombre as nombre_asignatura,
+    a.semestre,
+    a.creditos as creditos_asignatura,
+    
+    -- programa
+    prog.id_programa,
+    prog.nombre as nombre_programa,
+    prog.creditos as creditos_programa,
+    
+    -- departamento
+    dpto.id_departamento,
+    dpto.nombre as nombre_departamento,
+    
+    -- facultad
+    f.id_facultad,
+    f.nombre as nombre_facultad,
+    
+    -- docente
+    doc.id_docente,
+    doc.nombre as nombre_docente,
+    doc.apellido as apellido_docente,
+    doc.telefono as telefono_docente,
+    doc.sexo as sexo_docente,
+    
+    -- estudiante (uno cualquiera relacionado con esa asignatura, si hay)
+    est.id_estudiante,
+    est.nombre as nombre_estudiante,
+    est.apellido as apellido_estudiante,
+    est.telefono as telefono_estudiante,
+    est.sexo as sexo_estudiante
+
+from proyectos p
+join tipos_proyecto tp on p.id_tipo = tp.id_tipo
+join asignaturas a on p.id_asignatura = a.id_asignatura
+join programas prog on a.id_programa = prog.id_programa
+join departamentos dpto on prog.id_departamento = dpto.id_departamento
+join facultades f on dpto.id_facultad = f.id_facultad
+join docentes doc on p.id_docente = doc.id_docente
+left join estudiantes est on a.id_asignatura = est.id_asignatura;
+
+
+2. visa_evaluaciones (consulta de evaluaciones - vista #2
+listado de evaluaciones obligatorio el uso asociado de las tablas: tipos de proyecto, proyectos, facultad, programas, asignaturas, grupos, docentes y estudiantes. debe incluir los nombres de tipo de proyecto, nombre proyecto, nombre facultad, nombre programa, nombre asignatura, nombre docentes, nombre estudiantes).
+
+create view vista_evaluaciones_completa as
+select
+    evaluaciones.id_evaluacion,
+    evaluaciones.resultado,
+    evaluaciones.fecha_evaluacion,
+
+    tipos_proyecto.id_tipo,
+    tipos_proyecto.descripcion as tipo_proyecto,
+
+    proyectos.id_proyecto,
+    proyectos.titulo as nombre_proyecto,
+
+    facultades.id_facultad,
+    facultades.nombre as nombre_facultad,
+
+    programas.id_programa,
+    programas.nombre as nombre_programa,
+
+    asignaturas.id_asignatura,
+    asignaturas.nombre as nombre_asignatura,
+
+    docentes.id_docente,
+    docentes.nombre as nombre_docente,
+    docentes.apellido as apellido_docente,
+
+    estudiantes.id_estudiante,
+    estudiantes.nombre as nombre_estudiante,
+    estudiantes.apellido as apellido_estudiante
+
+from evaluaciones
+join proyectos on evaluaciones.id_proyecto = proyectos.id_proyecto
+join tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join docentes on proyectos.id_docente = docentes.id_docente
+join programas on asignaturas.id_programa = programas.id_programa
+join departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades on departamentos.id_facultad = facultades.id_facultad
+join estudiantes on asignaturas.id_asignatura = estudiantes.id_asignatura;
+
+
+3. vista_estadistica (consulta estadística de proyectos - vista #3
+listado organizado por de facultad, programa, asignatura, tipos de proyecto y cantidad total de proyectos)
+
+
+create view vista_estadistica_proyectos as
+select
+    facultades.id_facultad,
+    facultades.nombre as nombre_facultad,
+
+    programas.id_programa,
+    programas.nombre as nombre_programa,
+
+    asignaturas.id_asignatura,
+    asignaturas.nombre as nombre_asignatura,
+
+    tipos_proyecto.id_tipo,
+    tipos_proyecto.descripcion as tipo_proyecto,
+
+    count(proyectos.id_proyecto) as total_proyectos
+
+from proyectos
+join tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join programas on asignaturas.id_programa = programas.id_programa
+join departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades on departamentos.id_facultad = facultades.id_facultad
+
+group by
+    facultades.id_facultad, facultades.nombre,
+    programas.id_programa, programas.nombre,
+    asignaturas.id_asignatura, asignaturas.nombre,
+    tipos_proyecto.id_tipo, tipos_proyecto.descripcion;
+
+4. usuarios_roles_permisos (visualizar qué usuarios tienen qué roles y qué permisos están asignados a esos roles).
+
+create view vista_usuarios_roles_permisos as
+select
+    usuarios.id_usuario,
+    usuarios.username,
+
+    roles.id_rol,
+    roles.nombre as nombre_rol,
+
+    permisos.id_permiso,
+    permisos.descripcion as descripcion_permiso
+
+from usuarios
+join usuario_rol on usuarios.id_usuario = usuario_rol.id_usuario
+join roles on usuario_rol.id_rol = roles.id_rol
+join rol_permiso on roles.id_rol = rol_permiso.id_rol
+join permisos on rol_permiso.id_permiso = permisos.id_permiso;
+
+
+5. vista_proyectos vista_consulta #1 (vista-consulta #1 
+utilizar la vista “vista_proyectos” para la implementación de una consulta útil y diferente a las consultas anteriores 
+consulta mostrar la cantidad total de proyectos registrados, agrupados por el programa académico, el sexo del docente responsable del proyecto y el sexo del estudiante involucrado).
+
+
+select
+    programa.nombre as nombre_programa,
+    vista_completa.sexo_docente,
+    vista_completa.sexo_estudiante,
+    count(vista_completa.id_proyecto) as cantidad_proyectos
+from vista_proyectos_completa as vista_completa
+join programas as programa on vista_completa.id_programa = programa.id_programa
+group by programa.nombre, vista_completa.sexo_docente, vista_completa.sexo_estudiante
+order by programa.nombre, vista_completa.sexo_docente, vista_completa.sexo_estudiante;
+
+
+6. vista_evaluaciones vista-consulta #2
+(utilizar la vista “vista_evaluaciones” para la implementación de una consulta útil y diferente a las consultas anteriores 
+consulta promedio de evaluaciones de los proyectos con el nombre del programa y su id, nombre de la asignatura donde esta la nota, nombre completo del docente y nombre completo del estudiante).
+
+select
+    programas.nombre as nombre_programa,
+    tipos_proyecto.descripcion as tipo_proyecto,
+    asignaturas.nombre as nombre_asignatura,
+    concat(docentes.nombre, ' ', docentes.apellido) as nombre_completo_docente,
+    concat(estudiantes.nombre, ' ', estudiantes.apellido) as nombre_completo_estudiante,
+    round(avg(evaluaciones.resultado), 2) as promedio_resultado
+from evaluaciones
+join proyectos on evaluaciones.id_proyecto = proyectos.id_proyecto
+join tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join docentes on proyectos.id_docente = docentes.id_docente
+join programas on asignaturas.id_programa = programas.id_programa
+join departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades on departamentos.id_facultad = facultades.id_facultad
+join estudiantes on asignaturas.id_asignatura = estudiantes.id_asignatura
+group by
+    programas.nombre,
+    tipos_proyecto.descripcion,
+    asignaturas.nombre,
+    docentes.nombre,
+    docentes.apellido,
+    estudiantes.nombre,
+    estudiantes.apellido
+order by
+    nombre_programa,
+    tipo_proyecto,
+    nombre_asignatura,
+    nombre_completo_docente,
+    nombre_completo_estudiante;
+
+
+7. vista_estadistica-consulta #3 (vista-consulta #3
+utilizar la vista “vista_estadística” para la implementación de una consulta útil y diferente a las consultas anteriores)
+(consulta la cantidad de proyectos por facultad y calcula el porcentaje de cada tipo de proyecto en la facultad)
+
+select
+    facultades.nombre as nombre_facultad,
+    tipos_proyecto.descripcion as tipo_proyecto,
+    count(proyectos.id_proyecto) as cantidad_proyectos,
+    round(
+        count(proyectos.id_proyecto) * 100.0 / 
+        sum(count(proyectos.id_proyecto)) over (partition by facultades.id_facultad),
+        2
+    ) as porcentaje_en_facultad
+from proyectos
+join tipos_proyecto on proyectos.id_tipo = tipos_proyecto.id_tipo
+join asignaturas on proyectos.id_asignatura = asignaturas.id_asignatura
+join programas on asignaturas.id_programa = programas.id_programa
+join departamentos on programas.id_departamento = departamentos.id_departamento
+join facultades on departamentos.id_facultad = facultades.id_facultad
+group by
+    facultades.id_facultad,
+    facultades.nombre,
+    tipos_proyecto.id_tipo,
+    tipos_proyecto.descripcion
+order by
+    nombre_facultad,
+    tipo_proyecto;
+
+8. usuarios_roles_permisos vista_consulta #4 (vista-consulta #4
+utilizar la vista “vista_custom” para la implementación de una consulta útil y diferente a las consultas anteriores)
+(consulta los nombres de usuario, nombre rol y que diga la cantidad de permisos que tiene)
+
+select
+    usuarios.username as nombre_usuario,
+    roles.nombre as nombre_rol,
+    count(distinct permisos.id_permiso) as cantidad_permisos
+from usuarios
+join usuario_rol on usuarios.id_usuario = usuario_rol.id_usuario
+join roles on usuario_rol.id_rol = roles.id_rol
+join rol_permiso on roles.id_rol = rol_permiso.id_rol
+join permisos on rol_permiso.id_permiso = permisos.id_permiso
+group by
+    usuarios.username,
+    roles.nombre
+order by
+    nombre_usuario,
+    nombre_rol;
+
