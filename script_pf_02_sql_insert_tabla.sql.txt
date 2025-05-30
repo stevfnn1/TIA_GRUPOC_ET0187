@@ -1,0 +1,172 @@
+insert into instituciones (nombre) values
+('universidad nacional'),
+('universidad de antioquia'),
+('universidad de medellín'),
+('universidad pontificia bolivariana'),
+('universidad eafit');
+
+insert into facultades (nombre, id_institucion) values
+('facultad de ingeniería', 1),
+('facultad de ciencias', 1),
+('facultad de derecho', 2),
+('facultad de medicina', 3),
+('facultad de economía', 4);
+
+insert into decanos (nombre, apellido, email, telefono, sexo) values
+('carlos', 'pérez', 'cperez@un.edu.co', '3001234567', 'masculino'),
+('maría', 'gómez', 'mgomez@un.edu.co', '3002345678', 'femenino'),
+('luis', 'rodríguez', 'lrodriguez@un.edu.co', '3003456789', 'masculino'),
+('ana', 'lópez', 'alopez@un.edu.co', '3004567890', 'femenino'),
+('jorge', 'martínez', 'jmartinez@un.edu.co', '3005678901', 'masculino');
+
+insert into departamentos (nombre, id_facultad, id_decano) values
+('departamento de sistemas digitales', 1, 1),
+('departamento de matemáticas', 2, 2),
+('departamento de derecho penal', 3, 3),
+('departamento de cirugía', 4, 4),
+('departamento de finanzas', 5, 5),
+('departamento de sistemas digitales',1,1);
+
+insert into programas (id_programa, nombre,creditos, id_departamento) values
+(1,'ingeniería de sistemas',160, 1),
+(2,'matemáticas aplicadas',150, 2),
+(3,'derecho penal',140,3),
+(4,'medicina general',160, 4),
+(5,'ingenieria en software',160, 5),
+(6,'tecnologia en desarrollo de software',160, 5),
+(7,'economía empresarial',170, 5);
+
+insert into docentes (nombre, apellido, email, telefono, sexo, id_departamento) values
+('pedro', 'garcía', 'pgarcia@un.edu.co', '3101234567', 'masculino', 1),
+('lucía', 'ramírez', 'lramirez@un.edu.co', '3102345678', 'femenino', 2),
+('andrés', 'torres', 'atorres@un.edu.co', '3103456789', 'masculino', 3),
+('sofía', 'hernández', 'shernandez@un.edu.co', '3104567890', 'femenino', 4),
+('miguel', 'vargas', 'mvargas@un.edu.co', '3105678901', 'masculino', 5),
+('laura', 'medina', 'lmedina@un.edu.co', '3106789012', 'femenino', 1),
+('jorge', 'soto', 'jsoto@un.edu.co', '3107890123', 'masculino', 2),
+('valeria', 'castillo', 'vcastillo@un.edu.co', '3108901234', 'femenino', 3),
+('daniel', 'fernández', 'dfernandez2@un.edu.co', '3109012345', 'masculino', 4),
+('marta', 'quintero', 'mquintero@un.edu.co', '3110123456', 'femenino', 5);
+
+insert into asignaturas (nombre, semestre, creditos, id_programa, id_docente) values
+('programacion', 1, 3, 1, 1),
+('álgebra lineal', 1, 4, 2, 2),
+('derecho constitucional', 2, 3, 3, 3),
+('anatomía humana', 1, 5, 4, 4),
+('matematicas discreta', 1, 3, 5, 1),
+('matematicas operativa', 4, 3, 5, 1),
+('base de datos ', 3, 3, 6, 1),
+('programacion 2', 2, 3, 5, 1),
+('lenguaje', 1, 3, 5, 1),
+('calculo', 3, 3, 6, 1),
+('calculo diferencial', 4, 3, 6, 1),
+('microeconomía', 2, 4, 6, 5);
+
+insert into estudiantes (nombre, apellido, sexo, email, telefono, id_programa, id_asignatura) values
+('juan', 'pérez', 'masculino', 'jperez@un.edu.co', '3201234567', 1,1),
+('laura', 'gómez', 'femenino', 'lgomez@un.edu.co', '3202345678', 2,2),
+('carlos', 'lópez', 'masculino', 'clopez@un.edu.co', '3203456789', 3,3),
+('ana', 'martínez', 'femenino', 'amartinez@un.edu.co', '3204567890', 7,4),
+('luis', 'ramírez', 'masculino', 'lramirez@un.edu.co', '3205678901', 6,5),
+('mario', 'gomez', 'masculino', 'gomez@un.edu.co', '3202391901', 6,6),
+('lucas', 'sandola', 'masculino', 'sandola@un.edu.co', '3201998901', 1,1),
+('cas', 'sasola', 'masculino', 'sassa@un.edu.co', '3201298901', 5,2),
+('sos', 'sala', 'masculino', 'sa@un.edu.co', '3201118901', 5,1),
+('manues', 'camelo', 'masculino', 'camelo@un.edu.co', '3201838901', 5,1),
+('jaime', 'corrola', 'masculino', 'camo@un.edu.co', '3201998901', 2,1),
+('jaimes', 'tocala', 'masculino', 'spolla@un.edu.co', '391198901', 3,1),
+('ayuwoki', 'michael', 'masculino', 'jackson@un.edu.co', '3203208901', 3,1),
+('sofas', 'saleola', 'masculino', 'diss@un.edu.co', '3201998901', 5,1),
+('seis', 'loco', 'masculino', 'locoa@un.edu.co', '320112901', 7,1),
+('jh', 'cruz', 'masculino', 'jhcruz777@un.edu.co', '3201998901', 3,1),
+('steven', 'robles', 'masculino', 'rez@un.edu.co', '3202313401', 5,1);
+
+insert into roles (nombre) values
+('administrador'),
+('docente'),
+('estudiante'),
+('evaluador'),
+('coordinador');
+
+insert into usuarios (username, clave) values
+('admin1', 'clave12232323'),
+('docente1', 'clave2211234'),
+('estudiante1', 'clave31145'),
+('evaluador1', 'clave4156'),
+('coordinador1', 'clave51167');
+
+insert into usuario_rol (id_usuario, id_rol) values
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
+
+insert into permisos (descripcion) values
+('crear usuarios'),
+('editar usuarios'),
+('eliminar usuarios'),
+('ver reportes'),
+('asignar roles');
+
+insert into rol_permiso (id_rol, id_permiso) values
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(2, 4),
+(3, 4),
+(4, 4),
+(5, 5);
+
+insert into tipos_proyecto (descripcion) values
+('pia investigación'),
+('pa desarrollo'),
+('pa aplicación'),
+('pia tesis'),
+('pia práctica profesional'),
+('pa práctica profesional'),
+('pa investigació'),
+('pia desarrollo'),
+('pia aplicación'),
+('pa tesis');
+
+
+insert into proyectos (titulo, descripcion, fecha_inscripcion, id_tipo, id_asignatura, id_docente) values
+('sistema de gestión académica', 'desarrollo de un sistema para gestionar información académica.', '2025-01-15', 2, 1, 1),
+('estudio de funciones matemáticas', 'investigación sobre funciones y sus aplicaciones.', '2025-02-20', 1, 2, 2),
+('análisis de casos jurídicos', 'aplicación de teorías en casos reales.', '2025-03-10', 3, 3, 3),
+('estudio anatómico comparativo', 'investigación sobre estructuras anatómicas.', '2025-04-05', 1, 4, 4),
+('plan de negocios para startups', 'desarrollo de un plan de negocios.', '2025-05-12', 2, 5, 5);
+
+insert into evaluadores (nombre, apellido, email, telefono, sexo, id_asignatura) values
+('diego', 'fernández', 'dfernandez@un.edu.co', '3301234567', 'masculino', 1),
+('claudia', 'ríos', 'crios@un.edu.co', '3302345678', 'femenino', 2),
+('fernando', 'mendoza', 'fmendoza@un.edu.co', '3303456789', 'masculino', 3),
+('isabel', 'castro', 'icastro@un.edu.co', '3304567890', 'femenino', 4),
+('javier', 'suárez', 'jsuarez@un.edu.co', '3305678901', 'masculino', 5);
+
+insert into evaluaciones (resultado, fecha_evaluacion, id_proyecto, id_evaluador) values
+(4.5, '2025-06-01', 1, 1),
+(4.0, '2025-06-02', 2, 2),
+(3.8, '2025-06-03', 3, 3),
+(4.2, '2025-06-04', 4, 4),
+(4.7, '2025-06-05', 5, 5);
+
+insert into tipos_entregable (descripcion) values
+('informe '),
+('presentación oral'),
+('presentacion diapositivas'),
+('presentacion cartelera'),
+('pdf'),
+('memoria'),
+('enlace'),
+('video');
+
+insert into entregables (nombre, fecha_entrega, observaciones, id_proyecto, id_tipo_entregable) values
+('informe proyecto 1', '2025-06-10', 'entregado a tiempo.', 1, 1),
+('presentación proyecto 2', '2025-06-11', 'buena calidad.', 2, 2),
+('código fuente proyecto 3', '2025-06-12', 'revisado y aprobado.', 3, 3),
+('documento diseño proyecto 4', '2025-06-13', 'completo y detallado.', 4, 4),
+('manual usuario proyecto 5', '2025-06-14', 'fácil de entender.', 5, 5);
